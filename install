@@ -1,0 +1,3 @@
+#!/bin/sh
+
+mv -f probe /usr/bin/

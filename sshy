@@ -1,0 +1,4 @@
+#!/bin/sh
+
+sudo python3 $HOME/git/probe/probe.py
+

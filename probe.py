@@ -1,23 +1,40 @@
 #!/usr/bin/python
 
 import links
-from quo import prompt, echo
+import quo
 import requests
 import os
 
-echo(f"Created by: Gerrishon Sirere", fg="cyan", bold=True)
+banner = """
+██████╗░██████╗░░█████╗░██████╗░███████╗
+██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔════╝
+██████╔╝██████╔╝██║░░██║██████╦╝█████╗░░
+██╔═══╝░██╔══██╗██║░░██║██╔══██╗██╔══╝░░
+██║░░░░░██║░░██║╚█████╔╝██████╦╝███████╗
+╚═╝░░░░░╚═╝░░╚═╝░╚════╝░╚═════╝░╚══════╝
+
+"""
+
+quo.echo(f"{banner}", fg="vblue")
+quo.echo(f"Created by: Gerrishon Sirere", fg="cyan", bold=True)
 
 
-
+session = quo.Prompt(bottom_toolbar=quo.text.HTML('<style fg="red" bg="yellow"> Probe v2021.2 </style>'), placeholder=quo.text.HTML('<style fg ="gray"> (please type something)</style>'))
 
 outputFolder = 'output'
-print('\n')
+quo.echo('', nl=True)
 
-username = prompt(echo(f"Enter username", fg="black", bg="vyellow"),type=str)
+username = session.prompt("Enter username: ")
 
-echo(f"Finding Accounts", italic=True, reverse=True)
+quo.echo(f"Finding Accounts", italic=True, reverse=True)
 class ReCon:
-    def __init__(self,site_name, social_url, username, output):
+    def __init__(
+            self,
+            site_name, 
+            social_url, 
+            username, 
+            output
+            ):
         self.site_name = site_name
         self.social_url = social_url
         self.name = username
@@ -26,7 +43,7 @@ class ReCon:
         try:
             response = requests.get(self.social_url.format(self.name), timeout=5) 
             if response.status_code == 200:
-                echo(f"[+] Found {self.site_name}, {self.social_url.format(self.name)}", fg="cyan")
+                quo.echo(f"[+] Found {self.site_name}, {self.social_url.format(self.name)}", fg="cyan")
                 
                 ifexist = os.path.exists(self.output)
                 if ifexist == False:
@@ -38,13 +55,13 @@ class ReCon:
                     file.write(f'{self.social_url.format(self.name)}\n')
                     
                 else:
-                    echo(f"Something Went Wrong", fg="red")
+                    quo.echo(f"Something Went Wrong", fg="red")
 
             else:
-                echo(f"[x] Not found: { self.site_name}", bg="red")
+                quo.echo(f"[x] Not found: { self.site_name}", bg="red")
         except requests.exceptions.ReadTimeout:
-            echo(f"[x] Not found: {self.site_name} :Request timed out", bg="red")
+            quo.echo(f"[x] Not found: {self.site_name} :Request timed out", bg="red")
 for i in links.links:
     ReCon(i, links.links[i], username, outputFolder).find_account()
 
-print(f'Thanks for using probe')
+quo.echo(f'Thanks for using probe')

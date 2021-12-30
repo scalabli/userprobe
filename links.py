@@ -16,6 +16,7 @@ links = {
     'medium'    :'https://medium.com/@{}',
     'devianart' :'https://{}.deviantart.com',
     'vk'        :'https://vk.com/{}',
+    'gitlab'    :'https://gitlab.com/{}',
     'about.me'  :'https://about.me/{}',
     'imgur'     :'https://imgur.com/user/{}',
     'slideshare':'https://slideshare.net/{}',

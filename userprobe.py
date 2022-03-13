@@ -1,9 +1,19 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
+import datetime
 import links
-import quo
 import requests
 import os
+
+from quo import container, echo
+from quo.console import Console
+from quo.layout import FormattedTextControl, Window
+from quo.prompt import Prompt
+from quo.text import Text
+
+console = Console()
+
+console.rule()
 
 banner = """
 ██████╗░██████╗░░█████╗░██████╗░███████╗
@@ -15,18 +25,29 @@ banner = """
 
 """
 
-quo.echo(f"{banner}", fg="vblue")
-quo.echo(f"Created by: Gerrishon Sirere", fg="cyan", bold=True)
+container(
+        Window(
+            FormattedTextControl(f"{banner}", style="fg:blue bg:yellow")
 
+            )
+        )
+echo(f"Created by: Gerrishon Sirere", fg="cyan", bold=True)
 
-session = quo.Prompt(bottom_toolbar=quo.text.HTML('<style fg="red" bg="yellow"> Probe v2021.2 </style>'), placeholder=quo.text.HTML('<style fg ="gray"> (please type something)</style>'))
+def get_time():
+    now = datetime.datetime.now()
+    return [
+            ("bg:green bold", "%s:%s:%s"  % (now.hour, now.minute, now.second)),
+            ("bg:yellow fg:black", " Enter Username:")
+            ]
+
+session = Prompt(bottom_toolbar=Text('<style fg="red" bg="yellow"> Userprobe v2022.1 </style>'), placeholder=Text('<gray> (please type something)</gray>'), refresh_interval=0.5)
 
 outputFolder = 'output'
-quo.echo('', nl=True)
+echo('', nl=True)
 
-username = session.prompt("Enter username: ")
+username = session.prompt(get_time)
 
-quo.echo(f"Finding Accounts", italic=True, reverse=True)
+echo(f"Finding Accounts", italic=True, reverse=True)
 class ReCon:
     def __init__(
             self,
@@ -43,7 +64,7 @@ class ReCon:
         try:
             response = requests.get(self.social_url.format(self.name), timeout=5) 
             if response.status_code == 200:
-                quo.echo(f"[+] Found {self.site_name}, {self.social_url.format(self.name)}", fg="cyan")
+                echo(f"[+] Found {self.site_name}, {self.social_url.format(self.name)}", fg="cyan")
                 
                 ifexist = os.path.exists(self.output)
                 if ifexist == False:
@@ -55,13 +76,14 @@ class ReCon:
                     file.write(f'{self.social_url.format(self.name)}\n')
                     
                 else:
-                    quo.echo(f"Something Went Wrong", fg="red")
+                    echo(f"Something Went Wrong", fg="red")
 
             else:
-                quo.echo(f"[x] Not found: { self.site_name}", bg="red")
+                echo(f"[x] Not found on: ", nl=False, bg="red")
+                echo(f"{ self.site_name}", fg="green")
         except requests.exceptions.ReadTimeout:
-            quo.echo(f"[x] Not found: {self.site_name} :Request timed out", bg="red")
+            echo(f"[x] Not found on: {self.site_name} :Request timed out", bg="red")
 for i in links.links:
     ReCon(i, links.links[i], username, outputFolder).find_account()
 
-quo.echo(f'Thanks for using probe')
+echo(f'Thanks for using probe')

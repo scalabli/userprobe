@@ -1,4 +1,4 @@
-# probe
+# userprobe
 
 <h2>Installtion and Usage</h2>
 
